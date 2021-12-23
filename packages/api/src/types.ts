@@ -1,20 +1,19 @@
 import { Static, Type } from '@sinclair/typebox'
 
-export const ClaimEggParams = Type.Object({
+export const ClaimPlayerParams = Type.Object({
   key: Type.String(),
 })
-export type ClaimEggParams = Static<typeof ClaimEggParams>
+export type ClaimPlayerParams = Static<typeof ClaimPlayerParams>
 
-export const Egg = Type.Object({
-  index: Type.Number(),
+export const Player = Type.Object({
   key: Type.String(),
   token: Type.Optional(Type.String()),
   username: Type.String(),
 })
-export type Egg = Static<typeof Egg>
+export type Player = Static<typeof Player>
 
 export const IndexedEgg = Type.Intersect([
-  Egg,
+  Player,
   Type.Object({ rarityIndex: Type.String() }),
 ])
 export type IndexedEgg = Static<typeof IndexedEgg>

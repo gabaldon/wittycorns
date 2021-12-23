@@ -19,10 +19,8 @@ export class MintRepository {
   }
 
   public async get(index: number): Promise<MintOutput | null> {
-    return (
-      ((await this.collection.findOne({
-        'data.index': index,
-      })) as MintOutput) || null
-    )
+    return (await this.collection.findOne({
+      'data.index': index,
+    })) as MintOutput | null
   }
 }

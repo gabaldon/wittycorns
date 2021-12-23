@@ -19,9 +19,8 @@ export class MetadataRepository {
   }
 
   public async get(tokenId: number): Promise<EggMetadata | null> {
-    return (
-      ((await this.collection.findOne({ token_id: tokenId })) as EggMetadata) ||
-      null
-    )
+    return (await this.collection.findOne({
+      token_id: tokenId,
+    })) as EggMetadata | null
   }
 }

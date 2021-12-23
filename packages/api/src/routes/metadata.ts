@@ -1,15 +1,15 @@
 import { FastifyPluginAsync, FastifyRequest } from 'fastify'
-import Web3 from 'web3'
+//import Web3 from 'web3'
 
-import { WEB3_PROVIDER, WITMON_ERC721_ADDRESS } from '../constants'
-import { MetadataRepository } from '../repositories/metadata'
+//import { WEB3_PROVIDER, WITMON_ERC721_ADDRESS } from '../constants'
+//import { MetadataRepository } from '../repositories/metadata'
 import { EggMetadata, GetByNumericKeyParams } from '../types'
 
-const WITMON_ERCC721 = require('../assets/WitmonERC721.json')
+//const WITMON_ERCC721 = require('../assets/WitmonERC721.json')
 
 const metadata: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
   if (!fastify.mongo.db) throw Error('mongo db not found')
-  const metadataRepository = new MetadataRepository(fastify.mongo.db)
+  //const metadataRepository = new MetadataRepository(fastify.mongo.db)
 
   fastify.get<{ Params: GetByNumericKeyParams; Reply: EggMetadata | Error }>(
     '/metadata/:key',
@@ -24,6 +24,7 @@ const metadata: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         request: FastifyRequest<{ Params: { key: number } }>,
         reply
       ) => {
+        /*
         const { key } = request.params
 
         // Check if metadata already exists in DB
@@ -59,6 +60,7 @@ const metadata: FastifyPluginAsync = async (fastify, opts): Promise<void> => {
         await metadataRepository.create(metadataFromContract)
 
         return reply.status(200).send(metadataFromContract)
+        */
       },
     }
   )

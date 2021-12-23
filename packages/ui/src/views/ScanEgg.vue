@@ -62,7 +62,7 @@ export default {
       onDecode,
       previousRoute,
       claimEgg,
-      modal,
+      modal
     }
   },
 

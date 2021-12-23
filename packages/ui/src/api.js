@@ -32,15 +32,17 @@ export class WittyCreaturesApi {
   }
 
   claim (params) {
-    return { 
+    return {
       error: {
-        response: { data: { message: `Error claiming your id with key ${ params.key }`}}
+        response: {
+          data: { message: `Error claiming your id with key ${params.key}` }
+        }
       }
     }
   }
 
   getFarmerInfo (params) {
-    return { 
+    return {
       error: {
         response: { data: `Error getting user info` }
       }

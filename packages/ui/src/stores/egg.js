@@ -13,7 +13,7 @@ export const useEggStore = defineStore('egg', {
       color: null,
       creatureData: null,
       errors: {
-        claim: null,
+        claim: null
       }
     }
   },
@@ -90,9 +90,7 @@ export const useEggStore = defineStore('egg', {
           this.setError('info', request.error)
         } else {
           this.clearError('info')
-          const {
-            key,
-          } = request.egg
+          const { key } = request.egg
           this.id = key
 
           if (this.id !== router.currentRoute.value.params.id) {

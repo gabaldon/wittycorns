@@ -1,5 +1,5 @@
 import {
-  EGG_MINT_TIMESSTAMP,
+  PLAYER_MINT_TIMESSTAMP,
   EGG_COLORS_COUNT,
   INCUBATION_COOLDOWN_MILLIS,
   INCUBATION_DURATION_MILLIS,
@@ -47,7 +47,7 @@ export function fromHexToUint8Array(hex: string) {
 }
 
 export function isTimeToMint() {
-  return Date.now() >= EGG_MINT_TIMESSTAMP * 1000
+  return Date.now() >= PLAYER_MINT_TIMESSTAMP * 1000
 }
 
 export function printRemainingMillis(millis: number) {

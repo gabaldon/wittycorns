@@ -6,7 +6,7 @@ import { fastifyMongodb } from 'fastify-mongodb'
 import { join } from 'path'
 
 import { EGGS_COUNT, JWT_SECRET, MONGO_URI } from './constants'
-import { EggRepository } from './repositories/egg'
+import { PlayerRepository } from './repositories/player'
 
 export type AppOptions = {
   // Place your custom options for app below here.
@@ -50,7 +50,7 @@ const app: FastifyPluginAsync<AppOptions> = async (
     if (!fastify.mongo.db) throw Error('mongo db not found')
 
     // Initialize eggs repository and bootstrap with EGGS_COUNT eggs if no eggs exist already
-    const repository = new EggRepository(fastify.mongo.db)
+    const repository = new PlayerRepository(fastify.mongo.db)
     await repository.bootstrap(EGGS_COUNT, false)
 
     next()

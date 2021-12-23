@@ -3,17 +3,17 @@
  */
 
 // Byte length of egg keys. This can be adjusted for usability vs. security trade-offs.
-let eggKeyLengthBytes: number = process.env.EGG_KEY_LENGTH_BYTES
-  ? parseInt(process.env.EGG_KEY_LENGTH_BYTES)
+let playerKeyLengthBytes: number = process.env.PLAYER_KEY_LENGTH_BYTES
+  ? parseInt(process.env.PLAYER_KEY_LENGTH_BYTES)
   : 8
 // Ensure that egg keys byte length is 8 <= x < 30
-if (eggKeyLengthBytes < 8 || eggKeyLengthBytes > 30) {
-  eggKeyLengthBytes = 8
+if (playerKeyLengthBytes < 8 || playerKeyLengthBytes > 30) {
+  playerKeyLengthBytes = 8
 }
-export const EGG_KEY_LENGTH_BYTES = eggKeyLengthBytes
+export const PLAYER_KEY_LENGTH_BYTES = playerKeyLengthBytes
 
 // Base string to use for salting the deterministic egg key derivation.
-export const EGG_KEY_SALT: string = process.env.EGG_KEY_SALT || ''
+export const PLAYER_KEY_SALT: string = process.env.EGG_KEY_SALT || ''
 
 // JWT secret to derive tokens
 export const JWT_SECRET: string = process.env.JWT_SECRET || 'secret'
@@ -62,8 +62,8 @@ export const EGG_COLORS_COUNT = process.env.EGG_COLORS_COUNT
 
 // Egg birth/hatch date in millis
 // If `EGG_MINT_TIMESSTAMP=0`, checks are ignored (for testing purposes)
-export const EGG_MINT_TIMESSTAMP = process.env.EGG_MINT_TIMESSTAMP
-  ? parseInt(process.env.EGG_MINT_TIMESSTAMP)
+export const PLAYER_MINT_TIMESSTAMP = process.env.PLAYER_MINT_TIMESSTAMP
+  ? parseInt(process.env.PLAYER_MINT_TIMESSTAMP)
   : 1634835600 // Thursday, October 21, 2021 17:00:00 PM (GMT)
 
 // Web3 provider URL
@@ -81,8 +81,8 @@ export const MONGO_URI: string =
 
 export default {
   EGG_COLORS_COUNT,
-  EGG_KEY_LENGTH_BYTES,
-  EGG_MINT_TIMESSTAMP,
+  PLAYER_KEY_LENGTH_BYTES,
+  PLAYER_MINT_TIMESSTAMP,
   EGGS_COUNT,
   INCUBATION_COOLDOWN_MILLIS,
   INCUBATION_DURATION_MILLIS,
