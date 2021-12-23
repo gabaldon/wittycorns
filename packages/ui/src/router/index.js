@@ -1,11 +1,11 @@
 import { createRouter, createWebHashHistory } from 'vue-router'
 import Home from '../views/Home.vue'
-import MyEgg from '../views/MyEgg.vue'
+import Main from '../views/Main.vue'
 import InitGame from '../views/InitGame.vue'
 import Disclaimer from '../views/Disclaimer.vue'
-import { useEggStore } from '@/stores/egg'
+import { useStore } from '@/stores/player'
 import { createApp } from 'vue'
-import ScanEgg from '../views/ScanEgg.vue'
+import Scan from '../views/Scan.vue'
 import App from '@/App.vue'
 import { createPinia } from 'pinia'
 
@@ -20,11 +20,11 @@ const routes = [
     name: 'Home',
     component: Home,
     beforeEnter: async (to, from, next) => {
-      const store = useEggStore()
-      const eggLoginInfo = store.getToken()
-      if (eggLoginInfo && eggLoginInfo.token) {
-        console.log(eggLoginInfo, eggLoginInfo.token)
-        next({ name: 'egg', params: { id: eggLoginInfo.key } })
+      const store = useStore()
+      const loginInfo = store.getToken()
+      if (loginInfo && loginInfo.token) {
+        console.log(loginInfo, loginInfo.token)
+        next({ name: 'main', params: { id: loginInfo.key } })
       } else {
         console.log('init game')
         next('init-game')
@@ -37,9 +37,9 @@ const routes = [
     component: Disclaimer
   },
   {
-    name: 'egg',
-    path: '/egg/:id',
-    component: MyEgg
+    name: 'main',
+    path: '/:id',
+    component: Main
   },
   {
     name: 'init-game',
@@ -47,8 +47,8 @@ const routes = [
     component: InitGame
   },
   {
-    path: '/scan-egg',
-    component: ScanEgg
+    path: '/scan',
+    component: Scan
   },
   {
     name: 'import',
@@ -65,7 +65,7 @@ const routes = [
           JSON.stringify({ username, token, key })
         )
 
-        next(`/egg/${key}`)
+        next(`/${key}`)
       }
     }
   }
@@ -77,9 +77,9 @@ const router = createRouter({
 })
 
 router.beforeEach(to => {
-  const eggStore = useEggStore()
+  const playerStore = useStore()
 
-  if (to.meta.requiresAuth && !eggStore.isLoggedIn) return '/login'
+  if (to.meta.requiresAuth && !playerStore.isLoggedIn) return '/login'
 })
 
 export default router

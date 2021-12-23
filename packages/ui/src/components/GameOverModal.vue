@@ -30,8 +30,8 @@
         </h3>
         <div class="mt-2">
           <p class="text-sm text-gray-500 mb-2">
-            To open your egg and mint the NFT, you need to connect to a web3
-            provider (e.g. MetaMask). Export your egg if needed.
+            Preview and mint the NFT, you need to connect to a web3
+            provider (e.g. MetaMask). Create a backup if needed.
           </p>
         </div>
       </div>

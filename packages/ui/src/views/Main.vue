@@ -1,24 +1,24 @@
 <template>
-  <div v-if="egg.username" class="container-egg">
-    <div class="egg-content">
+  <Layout v-if="player.username">
+    <div class="content">
       <div>
-        <p class="subtitle">EGG ID: {{ egg.username }}</p>
+        <p class="subtitle">PLAYER ID: {{ player.username }}</p>
         <p class="title">My Witty Creature</p>
       </div>
       <WittyCreature
-        v-if="egg.creaturePreview"
-        :creature-preview="egg.creaturePreview"
+        v-if="player.creaturePreview"
+        :creature-preview="player.creaturePreview"
       />
       <div
         class="mint-status"
-        v-if="egg.mintInfo && egg.mintInfo.transactionHash"
+        v-if="player.mintInfo && player.mintInfo.transactionHash"
       >
         <p class="label">TRANSACTION HASH</p>
         <div class="address">
           <a
-            :href="`${etherscanBaseUrl}/${egg.mintInfo.transactionHash}`"
+            :href="`${etherscanBaseUrl}/${player.mintInfo.transactionHash}`"
             target="_blank"
-            >{{ egg.mintInfo.transactionHash }}
+            >{{ player.mintInfo.transactionHash }}
           </a>
           <img class="external-link-icon" src="@/assets/external.svg" alt="" />
         </div>
@@ -26,14 +26,14 @@
       <div
         class="mint-status"
         v-if="
-          egg.creatureData &&
-            egg.creatureData.tokenId &&
-            parseInt(egg.creatureData.tokenId) !== 0
+          player.creatureData &&
+            player.creatureData.tokenId &&
+            parseInt(player.creatureData.tokenId) !== 0
         "
       >
         <div class="opensea">
           <a
-            :href="`${openseaBaseUrl}/${egg.creatureData.tokenId}`"
+            :href="`${openseaBaseUrl}/${player.creatureData.tokenId}`"
             target="_blank"
             >See on OpenSea
           </a>
@@ -47,15 +47,15 @@
     </div>
     <div class="buttons">
       <Button
-        v-if="egg.hasBorn && !egg.creaturePreview"
-        @click="openModal('openEgg')"
+        v-if="player.hasBorn && !player.creaturePreview"
+        @click="openModal('preview')"
         color="black"
         class="center-item"
       >
-        Open my egg
+        Open my player
       </Button>
       <Button
-        v-else-if="egg.hasBorn && egg.creaturePreview"
+        v-else-if="player.hasBorn && player.creaturePreview"
         @click="mint"
         :type="type"
         color="black"
@@ -72,18 +72,18 @@
         <a class="link" href="https://witnet.io" target="_blank">Witnet</a>
       </p>
     </div>
-  </div>
+  </Layout>
 
   <ModalDialog :show="modal.visible.value" v-on:close="closeModal">
     <ModalExport v-if="modals.export" />
     <GameOverModal v-if="modals.gameOver" />
     <ModalMint v-if="modals.mint" />
-    <ModalOpenEgg v-if="modals.openEgg" />
+    <ModalPreview v-if="modals.preview" />
   </ModalDialog>
 </template>
 
 <script>
-import { useEggStore } from '@/stores/egg'
+import { useStore } from '@/stores/player'
 import { computed, onBeforeMount, onBeforeUnmount, reactive, ref } from 'vue'
 import imageUrl from '@/assets/egg-example.png'
 import { useModal } from '@/composables/useModal'
@@ -93,30 +93,30 @@ import { ETHERSCAN_BASE_URL, OPENSEA_BASE_URL } from '../constants'
 export default {
   setup () {
     const modal = useModal()
-    const egg = useEggStore()
+    const player = useStore()
     const web3Witmon = useWeb3Witmon()
     const modals = reactive({
       mint: false,
       export: false,
-      openEgg: false,
+      preview: false,
       gameOver: false
     })
-    const hasBorn = egg.hasBorn
+    const hasBorn = player.hasBorn
     let timeout
 
     onBeforeMount(async () => {
-      await egg.getEggInfo()
-      await egg.getMintInfo()
-      await egg.getPreview()
-      if (egg.hasBorn) {
+      await player.getInfo()
+      await player.getMintInfo()
+      await player.getPreview()
+      if (player.hasBorn) {
         const data = await web3Witmon.getCreatureData()
-        egg.setCreatureData(data)
+        player.setCreatureData(data)
       }
 
-      if (!egg.hasBorn) {
+      if (!player.hasBorn) {
         timeout = setTimeout(() => {
-          egg.timeToBirth -= 1
-        }, egg.timeToBirth - Date.now())
+          player.timeToBirth -= 1
+        }, player.timeToBirth - Date.now())
       }
     })
 
@@ -125,23 +125,17 @@ export default {
     })
 
     const type = computed(() =>
-      egg.incubating ||
-      (egg.creatureData && parseInt(egg.creatureData.tokenId) !== 0)
+      player.incubating ||
+      (player.creatureData && parseInt(player.creatureData.tokenId) !== 0)
         ? 'disable'
         : 'default'
     )
     const mintStatus = computed(() =>
-      egg.mintInfo.blockHash ? 'minted' : 'pending'
+      player.mintInfo.blockHash ? 'minted' : 'pending'
     )
 
-    function incubateMyEgg () {
-      if (type.value !== 'disable') {
-        egg.incubateEgg({ key: egg.id })
-      }
-    }
-
     function openModal (name) {
-      const needProvider = name === 'mint' || name === 'openEgg'
+      const needProvider = name === 'mint' || name === 'preview'
       if (!web3Witmon.isProviderConnected.value && needProvider) {
         modals['gameOver'] = true
       } else {
@@ -153,7 +147,7 @@ export default {
     function closeModal () {
       modals.mint = false
       modals.export = false
-      modals.openEgg = false
+      modals.preview = false
       modals.gameOver = false
       modal.hideModal()
     }
@@ -169,9 +163,8 @@ export default {
       openseaBaseUrl: OPENSEA_BASE_URL,
       mint,
       hasBorn,
-      egg,
+      player,
       type,
-      incubateMyEgg,
       closeModal,
       openModal,
       imageUrl,
@@ -179,7 +172,7 @@ export default {
       modals,
       mintStatus,
       enableProvider: web3Witmon.enableProvider,
-      openEgg: web3Witmon.openEgg,
+      preview: web3Witmon.preview,
       isProviderConnected: web3Witmon.isProviderConnected,
       getCreatureData: web3Witmon.getCreatureData
     }

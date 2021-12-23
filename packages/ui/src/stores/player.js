@@ -2,7 +2,7 @@ import { defineStore } from 'pinia'
 import { WittyCreaturesApi } from '@/api'
 import router from '../router'
 
-export const useEggStore = defineStore('egg', {
+export const useStore = defineStore('player', {
   state: () => {
     return {
       api: new WittyCreaturesApi(),
@@ -13,7 +13,7 @@ export const useEggStore = defineStore('egg', {
       color: null,
       creatureData: null,
       errors: {
-        claim: null
+        auth: null
       }
     }
   },
@@ -66,22 +66,21 @@ export const useEggStore = defineStore('egg', {
       this.errors[name] = error.response.data.message
       this.notify({ message: this.errors[name] })
     },
-    async claim ({ key }) {
-      const request = await this.api.claim({ key })
-      console.log('claim in claim', request)
+    async authorize ({ key }) {
+      const request = await this.api.authorize({ key })
       if (request.error) {
         router.push({ name: 'init-game' })
-        this.setError('claim', request.error)
+        this.setError('auth', request.error)
       } else if (request.token) {
         await this.saveClaimInfo(request)
-        this.clearError('claim')
-        this.getEggInfo()
+        this.clearError('auth')
+        this.getInfo()
       }
     },
-    async getEggInfo () {
+    async getInfo () {
       const tokenInfo = this.getToken()
       if (tokenInfo) {
-        const request = await this.api.getEggInfo({
+        const request = await this.api.getInfo({
           token: tokenInfo && tokenInfo.token,
           id: tokenInfo && tokenInfo.key
         })
@@ -90,17 +89,17 @@ export const useEggStore = defineStore('egg', {
           this.setError('info', request.error)
         } else {
           this.clearError('info')
-          const { key } = request.egg
+          const { key } = request.player
           this.id = key
 
           if (this.id !== router.currentRoute.value.params.id) {
-            this.incubateEgg({ key: router.currentRoute.value.params.id })
+            this.trade({ key: router.currentRoute.value.params.id })
             router.push('/')
           }
         }
       } else {
-        console.log('claim in get EggInfo')
-        this.claim({ key: router.currentRoute.value.params.id })
+        console.log('claim in getInfo')
+        this.authorize({ key: router.currentRoute.value.params.id })
       }
     },
     async getContractArgs (address) {

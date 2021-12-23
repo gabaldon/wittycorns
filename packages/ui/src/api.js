@@ -24,27 +24,25 @@ export class WittyCreaturesApi {
       .catch(this._handleError)
   }
 
-  _post ({ url, data, params }) {
+  _post ({ url, params }) {
+    console.log({ url, params })
     return axios
-      .post(url, data, params)
+      .post(url, params)
       .then(this._handleResponse)
       .catch(this._handleError)
   }
 
-  claim (params) {
-    return {
-      error: {
-        response: {
-          data: { message: `Error claiming your id with key ${params.key}` }
-        }
-      }
-    }
+  authorize (params) {
+    return this._post({
+      url: `${this.baseUrl}/auth`,
+      params: { key: params.key },
+    })
   }
 
-  getFarmerInfo (params) {
+  getInfo (params) {
     return {
       error: {
-        response: { data: `Error getting user info` }
+        response: { data: { message: `Error getting user info` }}
       }
     }
   }

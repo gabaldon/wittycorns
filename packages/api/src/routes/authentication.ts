@@ -23,6 +23,7 @@ const authentication: FastifyPluginAsync = async (
       request: FastifyRequest<{ Body: ClaimPlayerParams }>,
       reply
     ) => {
+      console.log('Request::', request)
       // Check 0: check if game is over
       if (PLAYER_MINT_TIMESSTAMP && isTimeToMint())
         return reply

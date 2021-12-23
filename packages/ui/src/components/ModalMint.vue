@@ -20,7 +20,7 @@
   </div>
   <div class="bg-gray-50 px-4 py-3 sm:px-6 sm:flex sm:flex-row-reverse">
     <button
-      @click="mintEgg"
+      @click="mint"
       type="button"
       class="w-full inline-flex justify-center rounded-md border border-transparent shadow-sm px-4 py-2 bg-gray-900 text-base font-medium text-white hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-gray-500 sm:ml-3 sm:w-auto sm:text-sm"
     >
@@ -53,7 +53,7 @@ export default defineComponent({
     const w3Witmon = useWeb3Witmon()
 
     return {
-      mintEgg () {
+      mint() {
         w3Witmon.mint()
         instance.parent.emit('close')
       }

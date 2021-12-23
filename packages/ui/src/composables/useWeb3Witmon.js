@@ -1,7 +1,7 @@
 import { onMounted, ref } from 'vue'
 import Web3 from 'web3/dist/web3.min.js'
 
-import { useEggStore } from '@/stores/egg'
+import { useStore } from '@/stores/player'
 import jsonInterface from '../WitmonERC721.json'
 import { CONTRACT_ADDRESS, NETWORK } from '../constants'
 
@@ -26,7 +26,7 @@ const errorPreviewMessage = `There was an error showing the preview of your NFT.
 
 export function useWeb3Witmon () {
   let web3
-  const egg = useEggStore()
+  const player = useStore()
   const isProviderConnected = ref(false)
   const mintedCreatureAddress = ref('')
   const creaturePreview = ref('')
@@ -38,9 +38,9 @@ export function useWeb3Witmon () {
     }
   }
 
-  async function openEgg () {
+  async function open () {
     if ((await web3.eth.net.getNetworkType()) !== NETWORK) {
-      return egg.setError('network', createErrorMessage(errorNetworkMessage))
+      return player.setError('network', createErrorMessage(errorNetworkMessage))
     } else {
       try {
         const contract = new web3.eth.Contract(
@@ -48,16 +48,16 @@ export function useWeb3Witmon () {
           CONTRACT_ADDRESS
         )
         const from = (await requestAccounts(web3))[0]
-        const previewArgs = await egg.getContractArgs(from)
+        const previewArgs = await player.getContractArgs(from)
         const preview = await contract.methods
           .previewCreatureImage(...previewArgs.values())
           .call()
         if (preview) {
-          egg.savePreview(preview)
+          player.savePreview(preview)
         }
       } catch (err) {
         console.error(err)
-        egg.setError('preview', createErrorMessage(errorPreviewMessage))
+        player.setError('preview', createErrorMessage(errorPreviewMessage))
       }
     }
   }
@@ -65,7 +65,7 @@ export function useWeb3Witmon () {
   onMounted(() => {
     if (window.ethereum) {
       web3 = new Web3(window.ethereum || 'ws://localhost:8545')
-      if (egg.hasBorn) {
+      if (player.hasBorn) {
         enableProvider()
       }
     }
@@ -73,7 +73,7 @@ export function useWeb3Witmon () {
 
   async function getCreatureData () {
     if ((await web3.eth.net.getNetworkType()) !== NETWORK) {
-      return egg.setError('network', createErrorMessage(errorNetworkMessage))
+      return player.setError('network', createErrorMessage(errorNetworkMessage))
     } else {
       try {
         const contract = new web3.eth.Contract(
@@ -82,14 +82,14 @@ export function useWeb3Witmon () {
         )
         const from = (await requestAccounts(web3))[0]
         const creatureData = await contract.methods
-          .getCreatureData(egg.index)
+          .getCreatureData(player.index)
           .call()
         if (creatureData) {
           return creatureData
         }
       } catch (err) {
         console.error(err)
-        egg.setError(
+        player.setError(
           'creatureData',
           createErrorMessage(errorCreatureDataMessage)
         )
@@ -99,28 +99,28 @@ export function useWeb3Witmon () {
 
   async function mint () {
     if ((await web3.eth.net.getNetworkType()) !== NETWORK) {
-      return egg.setError('network', createErrorMessage(errorNetworkMessage))
+      return player.setError('network', createErrorMessage(errorNetworkMessage))
     } else {
       const contract = new web3.eth.Contract(
         jsonInterface.abi,
         CONTRACT_ADDRESS
       )
       const from = (await requestAccounts(web3))[0]
-      const mintArgs = await egg.getContractArgs(from)
+      const mintArgs = await player.getContractArgs(from)
       contract.methods
         .mintCreature(...mintArgs.values())
         .send({ from })
         .on('error', error => {
-          egg.setError('mint', createErrorMessage(errorMintMessage))
+          player.setError('mint', createErrorMessage(errorMintMessage))
           console.error(error)
         })
         .on('transactionHash', function (transactionHash) {
-          egg.saveMintInfo({ transactionHash })
+          player.saveMintInfo({ transactionHash })
         })
         .on('confirmation', (confirmationNumber, receipt) => {
-          egg.saveMintInfo(receipt)
+          player.saveMintInfo(receipt)
           const data = getCreatureData()
-          egg.setCreatureData(data)
+          player.setCreatureData(data)
         })
         .then(newContractInstance => {
           console.log('newContractInstance', newContractInstance)
@@ -137,7 +137,7 @@ export function useWeb3Witmon () {
     isProviderConnected,
     creaturePreview,
     enableProvider,
-    openEgg,
+    open,
     getCreatureData
   }
 }

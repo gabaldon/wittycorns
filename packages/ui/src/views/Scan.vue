@@ -1,19 +1,19 @@
 <template>
-  <div class="scan-container">
+  <Layout>
     <p class="small-title import-label">Scan a QR code</p>
     <QrStream class="qr-code pl-4 pr-4 pb-4" @decode="onDecode"></QrStream>
-    <Button class="btn" color="black" @click="onDecode('/example-farmer-id')">
-      Import farmer id
+    <Button class="btn" color="black" @click="onDecode('/ef12efbd765f9ad3')">
+      Import player id
     </Button>
     <ModalDialog :show="modal.visible.value" v-on:close="modal.hideModal">
-      <ModalClaimConfirmation v-on:claim="claimEgg" />
+      <ModalClaimConfirmation v-on:claim="register" />
     </ModalDialog>
-  </div>
+  </Layout>
 </template>
 
 <script>
 import { ref } from 'vue'
-import { useEggStore } from '@/stores/egg'
+import { useStore } from '@/stores/player'
 import { QrStream } from 'vue3-qr-reader'
 import { useRouter } from 'vue-router'
 import { useModal } from '../composables/useModal'
@@ -24,44 +24,44 @@ export default {
   },
   setup (props, ctx) {
     const modal = useModal()
-    const egg = useEggStore()
-    const eggKey = ref(null)
+    const player = useStore()
+    const playerKey = ref(null)
     const decodedString = ref('')
 
     const router = useRouter()
     const previousRoute = ref('')
 
     function submitAndRedirect () {
-      router.push({ name: 'egg', params: { id: eggKey.value } })
+      router.push({ name: 'main', params: { id: playerKey.value } })
     }
 
     function onDecode (value) {
       if (value) {
         decodedString.value = value
-        if (!egg.getToken()) {
+        if (!player.getToken()) {
           modal.showModal()
         } else {
-          claimEgg()
+          register()
         }
       }
     }
 
-    function claimEgg () {
+    function register () {
       const chunks = decodedString.value.split('/')
       const key = chunks[chunks.length - 1]
       if (key) {
-        eggKey.value = key
+        playerKey.value = key
         submitAndRedirect()
       }
     }
 
     return {
-      egg,
-      eggKey,
+      player,
+      playerKey,
       submitAndRedirect,
       onDecode,
       previousRoute,
-      claimEgg,
+      register,
       modal
     }
   },
@@ -73,14 +73,3 @@ export default {
   }
 }
 </script>
-<style lang="scss" scoped>
-.scan-container {
-  padding: 32px;
-  max-width: 600px;
-  justify-content: center;
-  height: 100vh;
-  display: grid;
-  grid-template-rows: max-content 1fr max-content;
-  text-align: center;
-}
-</style>

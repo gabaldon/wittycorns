@@ -41,6 +41,7 @@ describe('authentication.ts', () => {
         payload: { key: initialPlayers[0].key },
       },
       (err, response) => {
+        console.log('-----', response.json())
         const { key, token, username } = response.json()
 
         expect(key).toBeTruthy()

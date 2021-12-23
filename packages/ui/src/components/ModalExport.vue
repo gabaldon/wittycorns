@@ -59,14 +59,14 @@
 import { defineComponent, getCurrentInstance } from 'vue'
 import { createImportLink } from '../services/exportInformation'
 import { copyTextToClipboard } from '../services/copyToClipboard'
-import { useEggStore } from '../stores/egg'
+import { useStore } from '../stores/player'
 
 export default defineComponent({
   setup (props, ctx) {
     const instance = getCurrentInstance()
 
     const importLink = createImportLink()
-    const egg = useEggStore()
+    const player = useStore()
     return {
       exportInfo () {
         instance.parent.emit('close')
@@ -74,7 +74,7 @@ export default defineComponent({
       importLink,
       async copyToClipboard () {
         await copyTextToClipboard(importLink)
-        egg.notify({ message: 'Copied', icon: 'none' })
+        player.notify({ message: 'Copied', icon: 'none' })
       }
     }
   }
