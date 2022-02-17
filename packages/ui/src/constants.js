@@ -90,15 +90,15 @@ export const ATTRIBUTES = {
 
 export const BUFFICORN_NAMES = {
   // reef
-  'Bufficorn-0': 'Bufficorn-0',
-  'Bufficorn-6': 'Bufficorn-6',
-  'Bufficorn-12': 'Bufficorn-12',
-  'Bufficorn-18': 'Bufficorn-18',
+  'Bufficorn-0': 'Reeffalo',
+  'Bufficorn-6': 'Denkocheski',
+  'Bufficorn-12': 'Netherdake',
+  'Bufficorn-18': 'Coralreef',
   // harmony
-  'Bufficorn-1': 'Bufficorn-1',
-  'Bufficorn-7': 'Bufficorn-7',
-  'Bufficorn-13': 'Bufficorn-13',
-  'Bufficorn-19': 'Bufficorn-19',
+  'Bufficorn-1': 'Ubi-ONE',
+  'Bufficorn-7': 'JiLiang',
+  'Bufficorn-13': 'Harmonaut',
+  'Bufficorn-19': 'Rongland',
   // balancer
   'Bufficorn-2': 'BALlercorn',
   'Bufficorn-8': 'AMMcorn',
@@ -110,15 +110,15 @@ export const BUFFICORN_NAMES = {
   'Bufficorn-15': 'Mr.Grantsalot',
   'Bufficorn-21': 'Buffirand',
   // vega
-  'Bufficorn-4': 'Bufficorn-4',
-  'Bufficorn-10': 'Bufficorn-10',
-  'Bufficorn-16': 'Bufficorn-16',
-  'Bufficorn-22': 'Bufficorn-22',
+  'Bufficorn-4': 'VeganRose',
+  'Bufficorn-10': 'DeFiantBill',
+  'Bufficorn-16': 'MarnyJoe',
+  'Bufficorn-22': 'LiquidArnold',
   // opolis
-  'Bufficorn-5': 'Bufficorn-5',
-  'Bufficorn-11': 'Bufficorn-11',
-  'Bufficorn-17': 'Bufficorn-17',
-  'Bufficorn-23': 'Bufficorn-23'
+  'Bufficorn-5': '0xb055',
+  'Bufficorn-11': 'JoshuaCorn',
+  'Bufficorn-17': 'PallerCorn',
+  'Bufficorn-23': 'Sporks'
 }
 
 export const STATS_FILTERS = {
